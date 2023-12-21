@@ -1,56 +1,40 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'firebase_options.dart';
-import 'login_screen.dart';
 
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
-}
+import 'home_screen.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MyHome(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class MyHome extends StatefulWidget {
-  const MyHome({super.key});
-
-  @override
-  State<MyHome> createState() => _MyHomeState();
-}
-
-class _MyHomeState extends State<MyHome> {
+class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController userEmail = TextEditingController();
   TextEditingController userPassword = TextEditingController();
 
+
   void userRegister()async{
     try{
       // Firebase Data Insert
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: userEmail.text,
           password: userPassword.text);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(),));
+      Navigator.push(context, MaterialPageRoute(builder:  (context) => MyDashboard(),));
+
     } on FirebaseAuthException catch(error){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${error.code.toString()}")));
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Register Screen"),
+        title: Text("Login Screen"),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +79,7 @@ class _MyHomeState extends State<MyHome> {
                   print(userEmail.text);
                   print(userPassword.text);
                   userRegister();
-                }, child: Text("Register")),
+                }, child: Text("Login")),
               ),
             ),
           )
@@ -104,4 +88,3 @@ class _MyHomeState extends State<MyHome> {
     );
   }
 }
-
