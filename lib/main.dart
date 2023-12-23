@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
+import 'home_screen.dart';
 import 'login_screen.dart';
 
 void main() async{
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: MyHome(),
+      home: MyDashboard(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -36,7 +37,7 @@ class _MyHomeState extends State<MyHome> {
 
   void userRegister()async{
     try{
-      // Firebase Data Insert
+
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: userEmail.text,
           password: userPassword.text);
@@ -61,7 +62,7 @@ class _MyHomeState extends State<MyHome> {
               controller: userEmail,
               decoration: InputDecoration(
                   label: Text("Enter Your Email"),
-                  hintText: "johndoe@gmail.com",
+                  hintText: "Police wala ka beta hassan@gmail.com",
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
