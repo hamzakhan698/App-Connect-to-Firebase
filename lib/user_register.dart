@@ -38,8 +38,10 @@ class _UserRegisterState extends State<UserRegister> {
       appBar: AppBar(
         title: Text('Add User'),
       ),
-      body: Column(
+      body: SingleChildScrollView(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
 
       Container(
@@ -48,7 +50,7 @@ class _UserRegisterState extends State<UserRegister> {
         controller: userName,
         decoration: InputDecoration(
             label: Text("Enter Your Name"),
-            hintText: "Police wala ka beta",
+            hintText: "John Doe",
             prefixIcon: Icon(Icons.email),
             border: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.black),
@@ -83,7 +85,7 @@ class _UserRegisterState extends State<UserRegister> {
         controller: userEmail,
         decoration: InputDecoration(
             label: Text("Enter Your Email"),
-            hintText: "Police wala ka beta hassan@gmail.com",
+            hintText: "Jhondoe323@gmail.com",
             prefixIcon: Icon(Icons.email),
             border: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.black),
@@ -118,10 +120,49 @@ class _UserRegisterState extends State<UserRegister> {
                   }, child: Text("Add User")),
                 ),
               ),
+            ),
+
+            StreamBuilder(
+                stream: FirebaseFirestore.instance.collection('userData').snapshots(),
+                builder: (context, snapshot) {
+
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return CircularProgressIndicator();
+                  }
+
+                  if(snapshot.hasData){
+                    var dataLengtht =snapshot.data!.docs.length;
+
+                    return ListView.builder(
+                        itemCount: dataLengtht,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+
+                          String userName =snapshot.data!.docs[index]["userName"];
+                          String userEmail =snapshot.data!.docs[index]["userEmail"];
+
+                          return  ListTile(
+                            leading: Icon(Icons.person),
+                            title: Text(userName),
+                            subtitle: Text(userEmail),
+                          );
+                        });
+                  }
+                  if(snapshot.hasError){
+                    return Icon(Icons.error,color: Colors.red,);
+                  }
+
+                  return Container();
+                }
+
             )
           ],
     ),
+
+      ),
+
     );
+
   }
 }
 
